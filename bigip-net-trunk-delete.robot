@@ -36,6 +36,7 @@ Documentation    Suite description
 ...             }
 
 Resource            ${VARIABLES_FILENAME}
+Resource            bigip-icontrol-api-general-keywords.robot
 Library             Collections
 Library             RequestsLibrary
 Suite Setup
@@ -45,52 +46,23 @@ Suite Teardown
 ${VARIABLES_FILENAME}           default_variables.robot
 
 *** Test Cases ***
-Configure F5 BIG-IP aggregate interfaces
+Delete F5 BIG-IP aggregate interface
     Generate Token
-    Configure BIG-IP trunk object
+    Delete BIG-IP trunk object
     Delete Token
 
 *** Keywords ***
-Generate Token
-    Create Session                  gen-token                       https://${IPV4_MGMT}        verify=False
-    &{api_headers} =                Create Dictionary               Content-type=application/json
-    &{api_payload} =                Create Dictionary               username=${GUI_USERNAME}    password=${GUI_PASSWORD}    loginProviderName=tmos
-    Log                             TOKEN REQUEST PAYLOAD: ${api_payload}
-    ${api_response} =               Post Request                    gen-token                   /mgmt/shared/authn/login    json=${api_payload}         headers=${api_headers}
-    Log                             TOKEN REQUEST RESPONSE: ${api_response.content}
-    Should Be Equal As Strings      ${api_response.status_code}     200
-    ${api_response_json} =          To Json                         ${api_response.content}
-    ${api_auth_token} =             Get From Dictionary             ${api_response_json}        token
-    ${api_auth_token} =             Get From Dictionary             ${api_auth_token}           token
-    ${api_auth_token} =             Set Test Variable               ${api_auth_token}
-    Log                             GREG ${api_auth_token}
-    [Teardown]                      Delete All Sessions
-
-Configure BIG-IP trunk object
+Delete BIG-IP trunk object
     log                             Beginning trunk object configuration
     ${trunk_object_payload}         to json     @{TRUNK_ATTRIBUTES}
     ${trunk_object_name}            get from dictionary     ${trunk_object_payload}     name
-    create session                  bigip-create-net-trunk              https://${IPV4_MGMT}
-    &{api_headers}                  Create Dictionary               Content-type=application/json       X-F5-Auth-Token=${api_auth_token}
-    Log                             API PAYLOAD: ${trunk_object_payload}
-    ${api_response}                 Post Request   bigip-create-net-trunk    /mgmt/tm/net/trunk    headers=${api_headers}  json=${trunk_object_payload}
-    Log                             API RESPONSE: ${api_response.content}
+    ${api_uri}                      set variable        /mgmt/tm/net/trunk/${trunk_object_name}
+    set test variable               ${api_uri}
+    ${api_response}                 BIG-IP iControl TokenAuth DELETE
     Should Be Equal As Strings      ${api_response.status_code}     200
     delete all sessions
-    create session                  bigip-list-net-trunk    https://${IPV4_MGMT}        verify=False
-    &{api_headers}                  Create Dictionary   Content-type=application/json   X-F5-Auth-Token=${api_auth_token}
-    ${api_response}                 get request     bigip-list-net-trunk     /mgmt/tm/net/trunk/${trunk_object_name}   headers=${api_headers}
-    Log                             API RESPONSE: ${api_response.content}
-    should be equal as strings      ${api_response.status_code}     200
-    ${api_response_dict}            to json                         ${api_response.content}
-    dictionary should contain sub dictionary  ${api_response_dict}      ${trunk_object_payload}
+    BIG-IP Clear API Parameters
+    ${api_uri}                      set variable        /mgmt/tm/net/trunk/${trunk_object_name}
+    ${api_response}                 BIG-IP iControl TokenAuth GET
+    Should Be Equal As Strings      ${api_response.status_code}     404
     [Teardown]                      Delete All Sessions
-
-Delete Token
-    Create Session                  delete-token                    https://${IPV4_MGMT}        verify=False
-    &{api_headers}                  Create Dictionary               Content-type=application/json       X-F5-Auth-Token=${api_auth_token}
-    ${api_response}     Delete Request  delete-token    /mgmt/shared/authz/tokens/${api_auth_token}             headers=${api_headers}
-    Should Be Equal As Strings      ${api_response.status_code}     200
-    [Teardown]                      Delete All Sessions
-
-

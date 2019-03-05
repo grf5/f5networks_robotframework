@@ -24,6 +24,7 @@ Documentation       Suite description
 ...                 All management protocols work over both IPv4 and IPv6.
 
 Resource            ${VARIABLES_FILENAME}
+Resource            bigip-icontrol-api-general-keywords.robot
 Library             Collections
 Library             RequestsLibrary
 Library             SnmpLibrary
@@ -46,29 +47,6 @@ Test IPv6 SNMP Polling
 # Dual stack management is not supported until TMOS version 14.0
 
 *** Keywords ***
-Generate Token
-    Create Session                  gen-token                       https://${IPV4_MGMT}        verify=False
-    ${api_auth} =                   Create List                     ${GUI_USERNAME}             ${GUI_PASSWORD}
-    &{api_headers} =                Create Dictionary               Content-type=application/json
-    &{api_payload} =                Create Dictionary               username=${GUI_USERNAME}    password=${GUI_PASSWORD}    loginProviderName=tmos
-    Log                             TOKEN REQUEST PAYLOAD: ${api_payload}
-    ${api_response} =               Post Request                    gen-token                   /mgmt/shared/authn/login    json=${api_payload}         headers=${api_headers}
-    Log                             TOKEN REQUEST RESPONSE: ${api_response.content}
-    Should Be Equal As Strings      ${api_response.status_code}     200
-    ${api_response_json} =          To Json                         ${api_response.content}
-    ${api_auth_token} =             Get From Dictionary             ${api_response_json}        token
-    ${api_auth_token} =             Get From Dictionary             ${api_auth_token}           token
-    ${api_auth_token} =             Set Test Variable               ${api_auth_token}
-    Log                             GREG ${api_auth_token}
-    [Teardown]                      Delete All Sessions
-
-Delete Token
-    Create Session                  delete-token                    https://${IPV4_MGMT}        verify=False
-    &{api_headers} =                Create Dictionary               Content-type=application/json       X-F5-Auth-Token=${api_auth_token}
-    ${api_response} =               Delete Request                  delete-token                /mgmt/shared/authz/tokens/${api_auth_token}             headers=${api_headers}
-    Should Be Equal As Strings      ${api_response.status_code}     200
-    [Teardown]                      Delete All Sessions
-
 Create SNMP Community
     Create Session                  bigip-create-snmp-community             https://${IPV4_MGMT}        verify=False
     &{api_headers}                  Create Dictionary               Content-type=application/json       X-F5-Auth-Token=${api_auth_token}

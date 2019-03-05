@@ -3,6 +3,7 @@ Documentation       Suite description
 ...                 Testing SSH Connectivity
 
 Resource            ${VARIABLES_FILENAME}
+Resource            bigip-icontrol-api-general-keywords.robot
 Library             SSHLibrary
 Suite Setup
 Suite Teardown

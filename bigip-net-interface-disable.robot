@@ -60,6 +60,7 @@ Documentation    Suite description
 ...               }
 
 Resource            ${VARIABLES_FILENAME}
+Resource            bigip-icontrol-api-general-keywords.robot
 Library             Collections
 Library             RequestsLibrary
 Suite Setup
@@ -67,57 +68,53 @@ Suite Teardown
 
 *** Variables ***
 ${VARIABLES_FILENAME}           default_variables.robot
+${TARGET_INTERFACE}             1.3
 
 *** Test Cases ***
-Configure F5 BIG-IP Data Plane Interfaces
+Bounce a BIG-IP physical interface
     Generate Token
-    Configure BIG-IP Interfaces
+    Disable a BIG-IP physical interface
+    Verify disabled state of BIG-IP physical interface
+    Verify down state of BIG-IP physical interface
     Delete Token
 
 *** Keywords ***
-Generate Token
-    Create Session                  gen-token                       https://${IPV4_MGMT}        verify=False
-    &{api_headers} =                Create Dictionary               Content-type=application/json
-    &{api_payload} =                Create Dictionary               username=${GUI_USERNAME}    password=${GUI_PASSWORD}    loginProviderName=tmos
-    Log                             TOKEN REQUEST PAYLOAD: ${api_payload}
-    ${api_response} =               Post Request                    gen-token                   /mgmt/shared/authn/login    json=${api_payload}         headers=${api_headers}
-    Log                             TOKEN REQUEST RESPONSE: ${api_response.content}
+Disable a BIG-IP physical interface
+    log                             Disabling interface ${TARGET_INTERFACE}
+    &{api_payload}                  create dictionary       kind=tm:net:interface:interfacestate    name=${TARGET_INTERFACE}    disabled=${True}
+    set test variable               &{api_payload}
+    ${api_uri}                      set variable            /mgmt/tm/net/interface/${TARGET_INTERFACE}
+    set test variable               ${api_uri}
+    ${api_response}                 BIG-IP iControl TokenAuth PATCH
     Should Be Equal As Strings      ${api_response.status_code}     200
-    ${api_response_json} =          To Json                         ${api_response.content}
-    ${api_auth_token} =             Get From Dictionary             ${api_response_json}        token
-    ${api_auth_token} =             Get From Dictionary             ${api_auth_token}           token
-    ${api_auth_token} =             Set Test Variable               ${api_auth_token}
-    Log                             GREG ${api_auth_token}
+    ${api_response_dict}            to json     ${api_response.content}
+    dictionary should contain item    ${api_response_dict}      disabled    True
     [Teardown]                      Delete All Sessions
 
-Configure BIG-IP Interfaces
-    :FOR    ${current_interface}    IN      @{PHYS_INTERFACE_DETAILS}
-    \   Log                         Parsing interface list element ${current_interface}
-    \   ${current_interface_dict}   to json     ${current_interface}
-    \   ${current_interface_name}   get from dictionary     ${current_interface_dict}    name
-    \   log                         Interface Name: ${current_interface_name}
-    \   Create Session                  bigip-modify-net-interface      https://${IPV4_MGMT}    verify=False
-    \   &{api_headers}                  Create Dictionary               Content-type=application/json       X-F5-Auth-Token=${api_auth_token}
-    \   Log                             API PAYLOAD: ${current_interface_dict}
-    \   ${api_response}             Patch Request   bigip-modify-net-interface    /mgmt/tm/net/interface/${current_interface_name}    headers=${api_headers}  json=${current_interface_dict}
-    \   Log                             API RESPONSE: ${api_response.content}
-    \   Should Be Equal As Strings      ${api_response.status_code}     200
-    \   delete all sessions
-    \   log                               Verifying configuration of interface ${current_interface}
-    \   create session                  bigip-list-net-interface    https://${IPV4_MGMT}        verify=False
-    \   &{api_headers}                  Create Dictionary   Content-type=application/json   X-F5-Auth-Token=${api_auth_token}
-    \   ${api_response}                 get request                     bigip-list-net-interface     /mgmt/tm/net/interface/${current_interface_name}   headers=${api_headers}
-    \   Log                             API RESPONSE: ${api_response.content}
-    \   should be equal as strings      ${api_response.status_code}     200
-    \   ${api_response_dict}            to json                         ${api_response.content}
-    \   dictionary should contain sub dictionary  ${api_response_dict}      ${current_interface_dict}
+Verify disabled state of BIG-IP physical interface
+    log                             Verifying the Disabling interface ${TARGET_INTERFACE}
+    ${api_uri}                      set variable            /mgmt/tm/net/interface/${TARGET_INTERFACE}
+    set test variable               ${api_uri}
+    ${api_response}                 BIG-IP iControl TokenAuth GET
+    should be equal as strings      ${api_response.status_code}     200
+    ${api_response_dict}            to json                         ${api_response.content}
+    dictionary should contain item  ${api_response_dict}      disabled      True
     [Teardown]                      Delete All Sessions
 
-Delete Token
-    Create Session                  delete-token                    https://${IPV4_MGMT}        verify=False
-    &{api_headers}                  Create Dictionary               Content-type=application/json       X-F5-Auth-Token=${api_auth_token}
-    ${api_response}     Delete Request  delete-token    /mgmt/shared/authz/tokens/${api_auth_token}             headers=${api_headers}
+Verify down state of BIG-IP physical interface
+    log                             Verifying the Down state of interface ${TARGET_INTERFACE}
+    ${api_uri}                      set variable       /mgmt/tm/net/interface/stats
+    set test variable               ${api_uri}
+    ${api_response}                 BIG-IP iControl TokenAuth GET
     Should Be Equal As Strings      ${api_response.status_code}     200
+    ${api_response_dict}            to json                         ${api_response.content}
+    ${interface_stats_entries}      get from dictionary  ${api_response_dict}          entries
+    ${interface_stats_dict}         get from dictionary  ${interface_stats_entries}    https://localhost/mgmt/tm/net/interface/${TARGET_INTERFACE}/stats
+    ${interface_stats_dict}         get from dictionary  ${interface_stats_dict}       nestedStats
+    ${interface_stats_dict}         get from dictionary  ${interface_stats_dict}       entries
+    ${interface_status_dict}        get from dictionary  ${interface_stats_dict}       status
+    ${interface_status}             get from dictionary  ${interface_status_dict}      description
+    ${interface_tmname}             get from dictionary  ${interface_stats_dict}       tmName
+    ${interface_tmname}             get from dictionary  ${interface_tmname}           description
+    should be equal as strings      ${interface_status}  disabled
     [Teardown]                      Delete All Sessions
-
-
