@@ -15,7 +15,6 @@ jsonpath-ng==1.4.3
 jsonpointer==1.14
 jsonschema==3.0.0a3
 oauthlib==3.0.0
-paramiko==2.4.2
 pkg-resources==0.0.0
 ply==3.11
 pyasn1==0.4.5
@@ -27,7 +26,6 @@ pyrsistent==0.14.9
 pysmi==0.3.3
 pysnmp==4.4.8
 pytz==2018.5
-PyYAML==3.13
 requests==2.21.0
 requests-oauthlib==1.2.0
 RESTinstance==1.0.0rc4
