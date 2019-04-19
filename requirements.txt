@@ -38,5 +38,5 @@ robotframework-sshlibrary==3.2.1
 six==1.12.0
 strict-rfc3339==0.7
 tzlocal==1.5.1
-urllib3==1.24.1
+urllib3>1.24.3
 validate-email==1.3
