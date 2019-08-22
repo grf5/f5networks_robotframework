@@ -1,5 +1,4 @@
-# f5_robot
-F5 development efforts for Python Robot
+# Robot Framework library for F5 Networks
 
-Started by Greg Robinson, g.robinson@f5.com
-January 2019
+This is an unofficial library and not supported by F5 Networks.
+
