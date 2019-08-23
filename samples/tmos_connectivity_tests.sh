@@ -19,4 +19,4 @@ export BIGIP_SECONDARY_MGMT_IP='192.168.100.102'
 echo ======================
 echo = DCNETARCH-SLB-0010 =
 echo ======================
-test=tmos_connectivity_tests; $robot_fullpath --outputdir ./reports -o $test.xml -l $test.log.html -r $test.report.html ./bin/$test.robot
+test=tmos_connectivity_tests; $robot_fullpath -o $test.xml -l $test.log.html -r $test.report.html ./$test.robot
