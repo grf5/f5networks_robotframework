@@ -16,14 +16,6 @@ export BIGIP_PRIMARY_MGMT_IP='192.168.100.101'
 # set BIGIP_SECONDARY_MGMT_IP to 'false' if using single device
 export BIGIP_SECONDARY_MGMT_IP='192.168.100.102'
 
-printf "====================================================================\n"
-printf "====================================================================\n"
-printf "=== Starting script execution\n"
-printf "====================================================================\n"
-printf "====================================================================\n"
-date
-start_time=`date`
-
 echo ======================
 echo = DCNETARCH-SLB-0010 =
 echo ======================
