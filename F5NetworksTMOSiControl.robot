@@ -10,7 +10,7 @@ Library    SSHLibrary
 ######################################
 ## iControl HTTP Operations Keywords
 ######################################
-Generate Token
+Generate Token    
     [Documentation]    Generates an API Auth token using username/password (See pages 20-21 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}   ${bigip_username}    ${bigip_password}
     ${api_uri}    set variable    /mgmt/shared/authn/login
@@ -24,7 +24,7 @@ Generate Token
     [Teardown]    Delete All Sessions
     [Return]    ${api_token}
 
-Extend Token
+Extend Token    
     [Documentation]    Extends the timeout on an existing auth token (See pages 20-21 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}   ${api_token}   ${timeout}=${36000}
     ${api_token}    Generate Token    ${bigip_host}
@@ -38,7 +38,7 @@ Extend Token
     [Teardown]    Delete All Sessions
     [Return]    ${api_token_status}
 
-Delete Token
+Delete Token    
     [Documentation]    Deletes an auth token (See pages 20-21 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_token}
     ${api_uri}    set variable    /mgmt/shared/authz/tokens/${api_token}
@@ -47,7 +47,7 @@ Delete Token
     Should Be Equal As Strings    ${api_response.status_code}    200
     [Teardown]    Delete All Sessions
 
-BIG-IP iControl TokenAuth GET
+BIG-IP iControl TokenAuth GET    
     [Documentation]    Performs an iControl REST API GET call using a pre-generated token (See pages 20-21 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_token}    ${api_uri}
     log    iControl GET Variables: HOST: ${bigip_host} URI: ${api_uri} AUTH-TOKEN: ${api_token}
@@ -55,11 +55,12 @@ BIG-IP iControl TokenAuth GET
     &{api_headers}    Create Dictionary    Content-type=application/json    X-F5-Auth-Token=${api_token}
     ${api_response}    get request    bigip-icontrol-get-tokenauth   ${api_uri}    headers=${api_headers}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl TokenAuth POST
+BIG-IP iControl TokenAuth POST    
     [Documentation]    Performs an iControl REST API POST call using a pre-generated token (See pages 20-21 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_token}    ${api_uri}    ${api_payload}
     log    iControl POST Variables: HOST: ${bigip_host} URI: ${api_uri} PAYLOAD: ${api_payload} AUTH-TOKEN: ${api_token}
@@ -67,11 +68,12 @@ BIG-IP iControl TokenAuth POST
     &{api_headers}    Create Dictionary    Content-type=application/json    X-F5-Auth-Token=${api_token}
     ${api_response}    post request    bigip-icontrol-post-tokenauth   ${api_uri}    headers=${api_headers}    json=${api_payload}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl TokenAuth PUT
+BIG-IP iControl TokenAuth PUT    
     [Documentation]    Performs an iControl REST API PUT call using a pre-generated token (See pages 20-21 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_token}    ${api_uri}    ${api_payload}
     log    iControl PUT Variables: HOST: ${bigip_host} URI: ${api_uri} PAYLOAD: ${api_payload} AUTH-TOKEN: ${api_token}
@@ -79,11 +81,12 @@ BIG-IP iControl TokenAuth PUT
     &{api_headers}    Create Dictionary    Content-type=application/json    X-F5-Auth-Token=${api_token}
     ${api_response}    put request    bigip-icontrol-put-tokenauth   ${api_uri}    headers=${api_headers}    json=${api_payload}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl TokenAuth PATCH
+BIG-IP iControl TokenAuth PATCH    
     [Documentation]    Performs an iControl REST API PATCH call using a pre-generated token (See pages 20-21 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_token}    ${api_uri}    ${api_payload}
     log    iControl PATCH Variables: HOST: ${bigip_host} URI: ${api_uri} PAYLOAD: ${api_payload} AUTH-TOKEN: ${api_token}
@@ -91,11 +94,12 @@ BIG-IP iControl TokenAuth PATCH
     &{api_headers}    Create Dictionary    Content-type=application/json    X-F5-Auth-Token=${api_token}
     ${api_response}    patch request    bigip-icontrol-patch-tokenauth   ${api_uri}    headers=${api_headers}    json=${api_payload}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl TokenAuth DELETE
+BIG-IP iControl TokenAuth DELETE    
     [Documentation]    Performs an iControl REST API DELETE call using a pre-generated token (See pages 20-21 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_token}    ${api_uri}
     log    iControl DELETE Variables: HOST: ${bigip_host} URI: ${api_uri} AUTH-TOKEN: ${api_token}
@@ -107,7 +111,7 @@ BIG-IP iControl TokenAuth DELETE
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl BasicAuth GET
+BIG-IP iControl BasicAuth GET    
     [Documentation]    Performs an iControl REST API GET call using basic auth (See pages 25-38 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${api_uri}
     ${api_auth}    Create List    ${bigip_username}   ${bigip_password}
@@ -116,11 +120,12 @@ BIG-IP iControl BasicAuth GET
     &{api_headers}    Create Dictionary    Content-type=application/json
     ${api_response}    get request    bigip-icontrol-get-basicauth   ${api_uri}    headers=${api_headers}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl BasicAuth POST
+BIG-IP iControl BasicAuth POST    
     [Documentation]    Performs an iControl REST API POST call using basic auth (See pages 39-44 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${api_uri}    ${api_payload}
     ${api_auth}    Create List    ${bigip_username}   ${bigip_password}
@@ -129,11 +134,12 @@ BIG-IP iControl BasicAuth POST
     &{api_headers}    Create Dictionary    Content-type=application/json
     ${api_response}    post request    bigip-icontrol-post-basicauth   ${api_uri}    headers=${api_headers}    json=${api_payload}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl BasicAuth PUT
+BIG-IP iControl BasicAuth PUT    
     [Documentation]    Performs an iControl REST API PUT call using basic auth (See pages 39-44 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${api_uri}    ${api_payload}
     ${api_auth}    Create List    ${bigip_username}   ${bigip_password}
@@ -142,11 +148,12 @@ BIG-IP iControl BasicAuth PUT
     &{api_headers}    Create Dictionary    Content-type=application/json
     ${api_response}    put request    bigip-icontrol-put-basicauth   ${api_uri}    headers=${api_headers}    json=${api_payload}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl BasicAuth PATCH
+BIG-IP iControl BasicAuth PATCH    
     [Documentation]    Performs an iControl REST API PATCH call using basic auth (See pages 39-44 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${api_uri}    ${api_payload}
     ${api_auth}    Create List    ${bigip_username}   ${bigip_password}
@@ -155,11 +162,12 @@ BIG-IP iControl BasicAuth PATCH
     &{api_headers}    Create Dictionary    Content-type=application/json
     ${api_response}    patch request    bigip-icontrol-patch-basicauth   ${api_uri}    headers=${api_headers}    json=${api_payload}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl BasicAuth DELETE
+BIG-IP iControl BasicAuth DELETE    
     [Documentation]    Performs an iControl REST API DELETE call using basic auth (See pages 13 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${api_uri}
     ${api_auth}    Create List    ${bigip_username}   ${bigip_password}
@@ -172,7 +180,7 @@ BIG-IP iControl BasicAuth DELETE
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl NoAuth GET
+BIG-IP iControl NoAuth GET    
     [Documentation]    Performs an iControl REST API GET call without authentication (See pages 25-38 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_uri}    ${api_payload}
     log    iControl GET Variables: HOST: ${bigip_host} URI: ${api_uri}
@@ -182,11 +190,12 @@ BIG-IP iControl NoAuth GET
     &{api_headers}    Create Dictionary    Content-type=application/json
     ${api_response}    get request    bigip-icontrol-get-noauth   ${api_uri}    headers=${api_headers}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl NoAuth POST
+BIG-IP iControl NoAuth POST    
     [Documentation]    Performs an iControl REST API POST call without authentication (See pages 39-44 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_uri}    ${api_payload}
     log    iControl POST Variables: HOST: ${bigip_host} URI: ${api_uri} PAYLOAD: ${api_payload}
@@ -198,11 +207,12 @@ BIG-IP iControl NoAuth POST
     &{api_headers}    Create Dictionary    Content-type=application/json
     ${api_response}    post request    bigip-icontrol-post-noauth   ${api_uri}    headers=${api_headers}    json=${api_payload}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl NoAuth PUT
+BIG-IP iControl NoAuth PUT    
     [Documentation]    Performs an iControl REST API PUT call without authentication (See pages 39-44 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_uri}    ${api_payload}
     log    iControl PUT Variables: HOST: ${bigip_host} URI: ${api_uri} PAYLOAD: ${api_payload}
@@ -214,11 +224,12 @@ BIG-IP iControl NoAuth PUT
     &{api_headers}    Create Dictionary    Content-type=application/json
     ${api_response}    put request    bigip-icontrol-put-noauth   ${api_uri}    headers=${api_headers}    json=${api_payload}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl NoAuth PATCH
+BIG-IP iControl NoAuth PATCH    
     [Documentation]    Performs an iControl REST API PATCH call without authentication (See pages 39-44 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}    ${api_uri}    ${api_payload}
     log    iControl PATCH Variables: HOST: ${bigip_host} URI: ${api_uri} PAYLOAD: ${api_payload}
@@ -226,11 +237,12 @@ BIG-IP iControl NoAuth PATCH
     &{api_headers}    Create Dictionary    Content-type=application/json
     ${api_response}    patch request    bigip-icontrol-patch-noauth   ${api_uri}    headers=${api_headers}    json=${api_payload}
     log    HTTP Response Code: ${api_response}
-    log    HTTP Response Payload: ${api_response.content}    formatter=repr
+    ${api_response.json}    to json    ${api_response.content}
+    log    ${api_response.json}    formatter=repr
     [Teardown]    Delete All Sessions
     [Return]    ${api_response}
 
-BIG-IP iControl NoAuth DELETE
+BIG-IP iControl NoAuth DELETE    
     [Documentation]    Performs an iControl REST API DELETE call without authentication (See pages 13 of https://cdn.f5.com/websites/devcentral.f5.com/downloads/icontrol-rest-api-user-guide-13-1-0-a.pdf.zip)
     [Arguments]    ${bigip_host}   ${api_uri}
     log    iControl DELETE Variables: HOST: ${bigip_host} URI: ${api_uri}
@@ -276,6 +288,17 @@ Query DNS Record
     [Documentation]    Executes the dig command on a BIG-IP
     [Arguments]    ${query}    ${ns_address}=4.2.2.1    ${query_type}=A
     [Return]
+
+Reset All Statistics
+    [Documentation]    Resets all statistics on the BIG-IP
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    
+    Reset All Interface Stats    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}
+    Reset All Trunk Stats    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}
+    Reset All Self-IP Stats    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}
+    Reset All Virtual Stats    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}
+    Reset All Node Stats    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}
+    Reset All Pool Stats    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}
+    Reset All Performance Stats    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}
 
 ########
 ## BGP
@@ -348,6 +371,7 @@ Get CM Self Device
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_uri}    Set Variable    /mgmt/tm/cm/device
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     ${api_response_json}    to Json    ${api_response.text}
     ${api_response_dict}    Convert to Dictionary    ${api_response_json}
     ${items_list}    Get from Dictionary    ${api_response_dict}    items
@@ -474,6 +498,7 @@ Add Device to CM Trust
     ${api_payload}    Create Dictionary    command    run    name    Root    caDevice    ${True}    device    ${peer_bigip_host}    deviceName    ${peer_bigip_cm_name}    username    ${peer_bigip_username}    password    ${peer_bigip_password}
     ${api_uri}    Set Variable    /mgmt/tm/cm/add-to-trust
     ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 Verify Trust Sync Status 13.1.1.4
@@ -498,6 +523,7 @@ Create CM Device Group
     ${api_uri}    Set Variable    /mgmt/tm/cm/device-group
     ${api_payload}    Create Dictionary    name    ${cm_device_group_name}    type    sync-failover
     ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response.text}
 
 Add Device to CM Device Group
@@ -506,6 +532,7 @@ Add Device to CM Device Group
     ${api_uri}    Set Variable    /mgmt/tm/cm/device-group/~Common~${cm_device_group_name}/devices
     ${api_payload}    Create Dictionary    name    ${cm_device_name}
     ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 Enable CM Auto Sync
@@ -514,6 +541,7 @@ Enable CM Auto Sync
     ${api_uri}    Set Variable    /mgmt/tm/cm/device-group/~Common~${cm_device_group_name}/
     ${api_payload}    Create Dictionary    autoSync    enabled
     ${api_response}    BIG-IP iControl BasicAuth PATCH    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 Disable CM Auto Sync
@@ -522,6 +550,7 @@ Disable CM Auto Sync
     ${api_uri}    Set Variable    /mgmt/tm/cm/device-group/~Common~${cm_device_group_name}/
     ${api_payload}    Create Dictionary    autoSync    disabled
     ${api_response}    BIG-IP iControl BasicAuth PATCH    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 Manually Sync BIG-IP Configurations
@@ -530,6 +559,7 @@ Manually Sync BIG-IP Configurations
     ${api_uri}    Set Variable    /mgmt/tm/cm/config-sync
     ${api_payload}    Create Dictionary    command    run    utilCmdArgs    to-group ${cm_device_group_name}
     ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     Sleep    3s
     [Return]    ${api_response}
 
@@ -539,14 +569,17 @@ Move CM Device to New Hostname
     ${api_uri}    Set Variable    /mgmt/tm/cm/device
     ${api_payload}    Create Dictionary    command    mv    name    ${current_name}    target    ${target}
     ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 Configure CM Device Unicast Address
     [Documentation]    Configures the IP address used to contact the peer for initial certificate based auth configuration (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/bigip-system-device-service-clustering-administration-13-1-0/5.html))
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${device_name}    ${unicast_address}
     ${api_uri}    Set Variable    /mgmt/tm/cm/device/~Common~${device_name}
-    ${api_payload}    Create Dictionary    unicast-address    ${unicast_address}
+    ${unicast_address_dict}    Create Dictionary    effectiveIp    ${unicast_address}    ip    ${unicast_address}
+    ${api_payload}    Create Dictionary    unicast-address    ${unicast_address_dict}
     ${api_response}    BIG-IP iControl BasicAuth PATCH    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 Configure CM Device Mirror IP
@@ -555,6 +588,7 @@ Configure CM Device Mirror IP
     ${api_uri}    Set Variable    /mgmt/tm/cm/device/~Common~${device_name}
     ${api_payload}    Create Dictionary    mirrorIp    ${mirror_ip}
     ${api_response}    BIG-IP iControl BasicAuth PATCH    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 Configure CM Device Configsync IP
@@ -563,51 +597,74 @@ Configure CM Device Configsync IP
     ${api_uri}    Set Variable    /mgmt/tm/cm/device/~Common~${device_name}
     ${api_payload}    Create Dictionary    configsyncIp    ${configsync_ip}
     ${api_response}    BIG-IP iControl BasicAuth PATCH    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
-##################
-## gtm bigip_add
-##################
+########
+## gtm
+########
 
-Add LTM to BIG-IP DNS
-    [Documentation]    Missing!
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
-    [Return]
-
-################
-## gtm gtm_add
-################
-
-Create BIG-IP DNS Synchronization Group
-    [Documentation]    Creates an empty GTM synchronization group (https://support.f5.com/csp/article/K13734)
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
-    [Return]
-
-###################
-## gtm datacenter
-###################
+Create BIG-IP DNS Listener
+    [Documentation]    Configures a VIP for listening for DNS requests (https://support.f5.com/csp/article/K14510)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${address}    ${mask}    ${partition}=Common    ${ip-protocol}=udp
+    ${api_uri}    Set Variable    /mgmt/tm/gtm/listener
+    ${api_payload}    Create Dictionary    name=${name}    address=${address}    mask=${mask}    partition=${partition}    ipProtocol=${ip-protocol}
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
 
 Create a BIG-IP DNS Data Center
-    [Documentation]    Creates an empty GTM Data Center (https://techdocs.f5.com/kb/en-us/products/big-ip-dns/manuals/product/bigip-dns-load-balancing-13-1-0/1.html)
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    [Documentation]    Creates a data center obect in BIG-IP DNS that specifies a geographic location of services (https://support.f5.com/csp/article/K13347)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${location}    ${description}=Created by Robot Framework    ${partition}=Common
+    ${api_uri}    Set Variable    /mgmt/tm/gtm/datacenter
+    ${api_payload}    Create Dictionary    name=${name}    location=${location}    description=${description}    partition=${partition}
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
-
-#################
-## gtm listener
-#################
-
-Create a BIG-IP DNS Listener
-    [Documentation]    Defines a VIP for listening for DNS requests (https://techdocs.f5.com/kb/en-us/products/big-ip-dns/manuals/product/bigip-dns-load-balancing-13-1-0/1.html)
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
-    [Return]    ${api_response}
-
-###############
-## gtm server
-###############
 
 Create a BIG-IP DNS Server
-    [Documentation]    Missing!
+    [Documentation]    Creates a BIG-IP DNS server object
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${datacenter}    ${expose-route-domains}=no    ${partition}=Common    ${description}=Created by Robot Framework    ${virtualServerDiscovery}=disabled    ${product}=bigip
+    ${api_uri}    Set Variable    /mgmt/tm/gtm/server
+    ${api_payload}    Create Dictionary    name=${name}    partition=${partition}    datacenter=${datacenter}    exposeRouteDomains=${expose-route-domains}    description=${description}    virtualServerDiscovery=${virtualServerDiscovery}    product=${product}
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Add Devices to a BIG-IP DNS Server
+    [Documentation]    Adds a BIG-IP LTM to the BIG-IP DNS Configuration
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${server_name}    ${addresses}    ${partition}=Common
+    ${api_uri}    Set Variable    /mgmt/tm/gtm/server/~${partition}~${server_name}/devices
+    ${api_payload}    Create Dictionary    name=${name}    partition=${partition}    addresses=${addresses}
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Enable BIG-IP DNS Synchronization
+    [Documentation]    Enables BIG-IP DNS Synchronization Globally
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_uri}    Set Variable    /mgmt/tm/gtm/global-settings/general
+    ${api_payload}    create dictionary    synchronization=yes
+    ${api_response}    BIG-IP iControl BasicAuth PATCH    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Enable BIG-IP DNS Synchronization of Zone Files
+    [Documentation]    Enables BIG-IP DNS Synchronization of Zone Files
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_uri}    Set Variable    /mgmt/tm/gtm/global-settings/general
+    ${api_payload}    create dictionary    synchronize-zone-files=yes
+    ${api_response}    BIG-IP iControl BasicAuth PATCH    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Configure BIG-IP DNS Synchronization Group Name
+    [Documentation]    Configures the BIG-IP DNS Synchronization Group Name
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${sync_group_name}
+    ${api_uri}    Set Variable    /mgmt/tm/gtm/global-settings/general
+    ${api_payload}    create dictionary    synchronization-group-name=${DNS_SINGLE_ROUTE_DOMAIN_SYNC_GROUP_NAME}
+    ${api_response}    BIG-IP iControl BasicAuth PATCH    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 #############
@@ -615,7 +672,7 @@ Create a BIG-IP DNS Server
 #############
 
 Create an LTM Node
-    [Documentation]    Missing!
+    [Documentation]    Creates a node in LTM (https://techdocs.f5.com/content/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${address}    ${partition}=Common    ${route_domain_id}=0    ${connectionLimit}=0    ${dynamicRatio}=1   ${description}=Robot Framework  ${monitor}=default  ${rateLimit}=disabled
     ${api_payload}    create dictionary   name=${name}   address=${address}%${route_domain_id}    partition=${partition}    connectionLimit=${connectionLimit}   dynamicRatio=${dynamicRatio}    description=${description}  monitor=${monitor}  rateLimit=${rateLimit}
     ${api_uri}    set variable    /mgmt/tm/ltm/node
@@ -624,7 +681,7 @@ Create an LTM Node
     [Return]    ${api_response}
 
 List LTM Node Configuration
-    [Documentation]    Missing!
+    [Documentation]    Lists existing nodes in LTM (https://techdocs.f5.com/content/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${node_name}    ${node_partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/node/~${node_partition}~${node_name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -632,7 +689,7 @@ List LTM Node Configuration
     [Return]    ${api_response}
 
 Show LTM Node Statistics
-    [Documentation]    Missing!
+    [Documentation]    Retrieves statistics for a single LTM node (https://techdocs.f5.com/content/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${node_name}    ${node_partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/node/~${node_partition}~${node_name}/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -640,7 +697,7 @@ Show LTM Node Statistics
     [Return]    ${api_response}
 
 Enable an LTM Node
-    [Documentation]    Missing!
+    [Documentation]    Enables an LTM node, which makes it available to all assigned pools (https://support.f5.com/csp/article/K13310)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${node_name}   ${node_partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/node/~${node_partition}~${node_name}/stats
     ${api_payload}    Create Dictionary    session=user-enabled
@@ -649,25 +706,25 @@ Enable an LTM Node
     [Return]    ${api_response}
 
 Disable an LTM Node
-    [Documentation]    Missing!
+    [Documentation]    Disables an LTM node; Nodes that have been disabled accept only new connections that match an existing persistence session (https://support.f5.com/csp/article/K13310)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${node_name}   ${node_partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/node/~${node_partition}~${node_name}
     [Return]    ${api_response}
 
 Mark an LTM Node as Down
-    [Documentation]    Missing!
+    [Documentation]    Marks an LTM node as down; Nodes that have been forced offline do not accept any new connections, even if they match an existing persistence session (https://support.f5.com/csp/article/K13310)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${node_name}   ${node_partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/node/~${node_partition}~${node_name}
     [Return]    ${api_response}
 
 Mark an LTM Node as Up
-    [Documentation]    Missing!
+    [Documentation]    Marks an LTM node as up (https://support.f5.com/csp/article/K13310)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${node_name}   ${node_partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/node/~${node_partition}~${node_name}
     [Return]    ${api_response}
 
 Verify an LTM Node Exists
-    [Documentation]    Missing!
+    [Documentation]    Verifies that an LTM node has been created (https://techdocs.f5.com/content/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${node_name}    ${node_partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/node/~${node_partition}~${node_name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -678,11 +735,20 @@ Verify an LTM Node Exists
     [Return]    ${api_response}
 
 Delete an LTM Node
-    [Documentation]    Missing!
+    [Documentation]    Deletes an LTM node (https://techdocs.f5.com/content/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${node_name}    ${node_partition}
     ${api_uri}    set variable    /mgmt/tm/ltm/node/~${node_partition}~${node_name}
     ${api_response}    BIG-IP iControl BasicAuth DELETE
     Should be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Reset All Node Stats
+    [Documentation]    Clears the statistics for all nodes  (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_payload}    Create Dictionary    command=reset-stats
+    ${api_uri}    set variable    /mgmt/tm/ltm/node
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 #############
@@ -690,7 +756,7 @@ Delete an LTM Node
 #############
 
 Create an LTM Pool
-    [Documentation]    Missing!
+    [Documentation]    Creates a pool of servers in LTM (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/4.html#guid-c8d28345-0337-484e-ad92-cf3f21d638f1)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}=Common    ${allowNat}=yes    ${allowSnat}=yes    ${ignorePersistedWeight}=disabled   ${loadBalancingMode}=round-robin    ${minActiveMembers}=${0}    ${minUpMembers}=${0}    ${minUpMembersAction}=failover  ${minUpMembersChecking}=disabled    ${queueDepthLimit}=${0}    ${queueOnConnectionLimit}=disabled    ${queueTimeLimit}=${0}  ${reselectTries}=${0}   ${serviceDownAction}=none   ${slowRampTime}=${10}   ${monitor}=none
     ${api_payload}    create dictionary   name=${name}    partition=${partition}  allowNat=${allowNat}    allowSnat=${allowSnat}    ignorePersistedWeight=${ignorePersistedWeight}  loadBalancingMode=${loadBalancingMode}    minActiveMembers=${minActiveMembers}  minUpMembers=${minUpMembers}    minUpMembersAction=${minUpMembersAction}    minUpMembersChecking=${minUpMembersChecking}    queueDepthLimit=${queueDepthLimit}  queueOnConnectionLimit=${queueOnConnectionLimit}    queueTimeLimit=${queueTimeLimit}    reselectTries=${reselectTries}  serviceDownAction=${serviceDownAction}    slowRampTime=${slowRampTime}    monitor=${monitor}
     ${api_uri}    set variable    /mgmt/tm/ltm/pool
@@ -699,7 +765,7 @@ Create an LTM Pool
     [Return]    ${api_response}
 
 Add an LTM Pool Member to a Pool
-    [Documentation]    Missing!
+    [Documentation]    Adds a node to an existing pool (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/4.html#guid-c8d28345-0337-484e-ad92-cf3f21d638f1)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${pool_name}    ${pool_member_name}    ${port}    ${address}  ${pool_partition}=Common    ${pool_member_partition}=Common    ${route_domain_id}=0    ${connectionLimit}=${0}    ${dynamicRatio}=${1}    ${inheritProfile}=enabled   ${monitor}=default  ${priorityGroup}=${0}   ${rateLimit}=disabled   ${ratio}=${1}  ${session}=user-enabled    ${state}=user-up
     ${api_payload}    create dictionary   name=${pool_member_name}:${port}    address=${address}    partition=${pool_member_partition}    route_domain_id=${route_domain_id}  connectionLimit=${connectionLimit}  dynamicRatio=${dynamicRatio}    inheritProfile=${inheritProfile}    monitor=${monitor}    priorityGroup=${priorityGroup}    rateLimit=${rateLimit}  ratio=${ratio}  session=${session}    state=${state}
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/~${pool_partition}~${pool_name}/members
@@ -708,7 +774,7 @@ Add an LTM Pool Member to a Pool
     [Return]    ${api_response}
 
 Enable an LTM Pool Member
-    [Documentation]    Missing!
+    [Documentation]    Enables a pool member in a particular pool (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/5.html#guid-ec0ade90-7b1b-4dfe-aa28-13b50071c34e)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${pool_name}    ${pool_member_name}    ${pool_partition}=Common    ${pool_member_partition}=Common
     ${api_payload}    Create Dictionary    session=user-enabled
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/~${pool_partition}~${pool_name}/members/~${pool_member_partition}~${pool_member_name}
@@ -717,7 +783,7 @@ Enable an LTM Pool Member
     [Return]    ${api_response}
 
 Disable an LTM Pool Member
-    [Documentation]    Missing!
+    [Documentation]    Disables a pool member in a particular pool; the node itself remains available to other pools (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/5.html#guid-ec0ade90-7b1b-4dfe-aa28-13b50071c34e)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${pool_name}    ${pool_member_name}    ${pool_partition}=Common    ${pool_member_partition}=Common
     ${api_payload}    Create Dictionary    session=user-disabled
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/~${pool_partition}~${pool_name}/members/~${pool_member_partition}~${pool_member_name}
@@ -726,7 +792,7 @@ Disable an LTM Pool Member
     [Return]    ${api_response}
 
 Mark an LTM Pool Member as Down
-    [Documentation]    Missing!
+    [Documentation]    Marks a pool member dowm in a particular pool (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/5.html#guid-ec0ade90-7b1b-4dfe-aa28-13b50071c34e)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${pool_name}    ${pool_member_name}    ${pool_partition}=Common    ${pool_member_partition}=Common
     ${api_payload}    Create Dictionary    state=user-down
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/~${pool_partition}~${pool_name}/members/~${pool_member_partition}~${pool_member_name}
@@ -735,7 +801,7 @@ Mark an LTM Pool Member as Down
     [Return]    ${api_response}
 
 Mark an LTM Pool Member as Up
-    [Documentation]    Missing!
+    [Documentation]    Marks a pool member up in a particular pool (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/5.html#guid-ec0ade90-7b1b-4dfe-aa28-13b50071c34e)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${pool_name}    ${pool_member_name}    ${pool_partition}=Common    ${pool_member_partition}=Common
     ${api_payload}    Create Dictionary    state=user-up
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/~${pool_partition}~${pool_name}/members/~${pool_member_partition}~${pool_member_name}
@@ -744,7 +810,7 @@ Mark an LTM Pool Member as Up
     [Return]    ${api_response}
 
 Remove an LTM Pool Member from a Pool
-    [Documentation]    Missing!
+    [Documentation]    Removes a single pool member from an existing pool (Marks a pool member dowm in a particular pool (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/4.html#guid-c8d28345-0337-484e-ad92-cf3f21d638f1))
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${pool_name}    ${pool_member_name}    ${pool_partition}=Common    ${pool_member_partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/~${pool_partition}~{pool_name}/members/~${pool_member_partition}~${pool_member_name}
     ${api_response}    BIG-IP iControl BasicAuth DELETE
@@ -752,7 +818,7 @@ Remove an LTM Pool Member from a Pool
     [Return]    ${api_response}
 
 Delete an LTM Pool
-    [Documentation]    Missing!
+    [Documentation]    Deletes an LTM pool, does not delete the node objects for each pool member (Marks a pool member dowm in a particular pool (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/4.html#guid-c8d28345-0337-484e-ad92-cf3f21d638f1))
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/~${partition}~${name}
     ${api_response}    BIG-IP iControl BasicAuth DELETE
@@ -760,7 +826,7 @@ Delete an LTM Pool
     [Return]    ${api_response}
 
 Retrieve All LTM Pool Statistics
-    [Documentation]    Missing!
+    [Documentation]    Pulls the statistics for all pools (https://devcentral.f5.com/s/articles/getting-started-with-icontrol-working-with-statistics-20513)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -768,7 +834,7 @@ Retrieve All LTM Pool Statistics
     [Return]    ${api_response}
 
 Retrieve LTM Pool Statistics
-    [Documentation]    Missing!
+    [Documentation]    Pulls the statistics for all LTM pools (https://devcentral.f5.com/s/articles/getting-started-with-icontrol-working-with-statistics-20513)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/~${partition}~${name}/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -776,10 +842,19 @@ Retrieve LTM Pool Statistics
     [Return]    ${api_response}
 
 Retrieve LTM Pool Member Statistics
-    [Documentation]    Missing!
+    [Documentation]    Pulls the statistics for a single pool member within an existing pool (https://devcentral.f5.com/s/articles/getting-started-with-icontrol-working-with-statistics-20513)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${pool_name}    ${partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/pool/~${partition}~${pool_name}/members/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Reset All Pool Stats
+    [Documentation]    Clears the statistics for all pools (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_payload}    Create Dictionary    command=reset-stats
+    ${api_uri}    set variable    /mgmt/tm/ltm/pool
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
     Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
@@ -789,7 +864,7 @@ Retrieve LTM Pool Member Statistics
 ################
 
 Create a BIG-IP Client SSL Profile
-    [Documentation]    Missing!
+    [Documentation]    Creates a client SSL profile in LTM (https://support.f5.com/csp/article/K14783)
     [Arguments]    ${bigip_host}   ${bigip_username}    ${bigip_password}    ${name}	 	${partition}=Common    ${alertTimeout}=indefinite	 	${allowDynamicRecordSizing}=disabled	 	${allowExpiredCrl}=disabled	 	${allowNonSsl}=disabled	 	${authenticate}=once	 	${authenticateDepth}=9	${cacheSize}=262144	${cacheTimeout}=3600	${cert}=/Common/default.crt	 	${certLifespan}=30	${certLookupByIpaddrPort}=disabled	 	${ciphers}=DEFAULT	 	${defaultsFrom}=/Common/clientssl	 	${forwardProxyBypassDefaultAction}=intercept	 	${genericAlert}=enabled	 	${handshakeTimeout}=10	 	${inheritCertkeychain}=true	 	${key}=/Common/default.key	 	${kind}=tm:ltm:profile:client-ssl:client-sslstate	 	${maxActiveHandshakes}=indefinite	 	${maxAggregateRenegotiationPerMinute}=indefinite	 	${maxRenegotiationsPerMinute}=5	${maximumRecordSize}=16384	${modSslMethods}=disabled	 	${mode}=enabled	 	${peerCertMode}=ignore	 	${peerNoRenegotiateTimeout}=10	 	${proxySsl}=disabled	 	${proxySslPassthrough}=disabled	 	${renegotiateMaxRecordDelay}=indefinite	 	${renegotiatePeriod}=indefinite	 	${renegotiateSize}=indefinite	 	${renegotiation}=enabled	 	${retainCertificate}=true	 	${secureRenegotiation}=require	 	${sessionMirroring}=disabled	 	${sessionTicket}=disabled	 	${sessionTicketTimeout}=0	${sniDefault}=false	 	${sniRequire}=false	 	${sslForwardProxy}=disabled	 	${sslForwardProxyBypass}=disabled	 	${sslSignHash}=any	 	${strictResume}=disabled	 	${uncleanShutdown}=enabled
     ${api_payload}    create dictionary   name=${name}    partition=${partition}  name=${name}    alertTimeout=${alertTimeout}    allowDynamicRecordSizing=${allowDynamicRecordSizing}    allowExpiredCrl=${allowExpiredCrl}    allowNonSsl=${allowNonSsl}    authenticate=${authenticate}    authenticateDepth=${authenticateDepth}    certLifespan=${certLifespan}    ciphers=${ciphers}    defaultsFrom=${defaultsFrom}    forwardProxyBypassDefaultAction=${forwardProxyBypassDefaultAction}    genericAlert=${genericAlert}    handshakeTimeout=${handshakeTimeout}    inheritCertkeychain=${inheritCertkeychain}    key=${key}    kind=${kind}    maxActiveHandshakes=${maxActiveHandshakes}    maxAggregateRenegotiationPerMinute=${maxAggregateRenegotiationPerMinute}    maxRenegotiationsPerMinute=${maxRenegotiationsPerMinute}    mode=${mode}    peerCertMode=${peerCertMode}    peerNoRenegotiateTimeout=${peerNoRenegotiateTimeout}    proxySsl=${proxySsl}    proxySslPassthrough=${proxySslPassthrough}    renegotiateMaxRecordDelay=${renegotiateMaxRecordDelay}    renegotiatePeriod=${renegotiatePeriod}    renegotiateSize=${renegotiateSize}    renegotiation=${renegotiation}    retainCertificate=${retainCertificate}    secureRenegotiation=${secureRenegotiation}    sessionMirroring=${sessionMirroring}    sessionTicket=${sessionTicket}    sessionTicketTimeout=${sessionTicketTimeout}    sniRequire=${sniRequire}    sslForwardProxy=${sslForwardProxy}    sslForwardProxyBypass=${sslForwardProxyBypass}    sslSignHash=${sslSignHash}    strictResume=${strictResume}    uncleanShutdown=${uncleanShutdown}
     set test variable   ${api_payload}
@@ -804,7 +879,7 @@ Create a BIG-IP Client SSL Profile
 ################
 
 Reset Virtual Stats
-    [Documentation]    Missing!
+    [Documentation]    Clears the statistics for a particular virtual server (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}
     ${api_payload}    Create Dictionary    command=reset-stats    name=${name}
     ${api_uri}    set variable    /mgmt/tm/ltm/virtual
@@ -813,7 +888,7 @@ Reset Virtual Stats
     [Return]    ${api_response}
 
 Reset All Virtual Stats
-    [Documentation]    Missing!
+    [Documentation]    Clears the statistics for all virtual servers (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_payload}    Create Dictionary    command=reset-stats
     ${api_uri}    set variable    /mgmt/tm/ltm/virtual
@@ -822,7 +897,7 @@ Reset All Virtual Stats
     [Return]    ${api_response}
 
 Create an LTM FastL4 Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Creates a FastL4 virtual server in LTM (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${destination}    ${partition}=Common    ${addressStatus}=yes    ${autoLasthop}=default  ${connectionLimit}=${0}    ${enabled}=${True}  ${ipProtocol}=any   ${mask}=any    ${source}=0.0.0.0\/0    ${sourcePort}=preserve    ${translateAddress}=disabled    ${translatePort}=disabled    ${pool}=none    ${sourceAddressTranslation_pool}=none   ${sourceAddressTranslation_type}=none
     ${SourceAddressTranslation}    create dictionary    pool=${sourceAddressTranslation_pool}   type=${sourceAddressTranslation_type}
     ${api_payload}    create dictionary    name=${name}    destination=${destination}    partition=${partition}    addressStatus=${addressStatus}    autoLasthop=${autoLasthop}  connectionLimit=${connectionLimit}    ipProtocol=${ipProtocol}   mask=${mask}    source=${source}    sourcePort=${sourcePort}    translateAddress=${translateAddress}    translatePort=${translatePort}    pool=${pool}    sourceAddressTranslation=${sourceAddressTranslation}
@@ -832,7 +907,7 @@ Create an LTM FastL4 Virtual Server
     [Return]    ${api_response}
 
 Create an LTM FastL4 IPv6 Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Creates a FastL4 virtual server in LTM (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${destination}    ${partition}=Common    ${addressStatus}=yes    ${autoLasthop}=default  ${connectionLimit}=${0}    ${enabled}=${True}  ${ipProtocol}=any   ${mask}=any    ${source}=::/0    ${sourcePort}=preserve    ${translateAddress}=disabled    ${translatePort}=disabled    ${pool}=none    ${sourceAddressTranslation_pool}=none   ${sourceAddressTranslation_type}=none
     ${SourceAddressTranslation}    create dictionary    pool=${sourceAddressTranslation_pool}   type=${sourceAddressTranslation_type}
     ${api_payload}    create dictionary    name=${name}    destination=${destination}    partition=${partition}    addressStatus=${addressStatus}    autoLasthop=${autoLasthop}  connectionLimit=${connectionLimit}    ipProtocol=${ipProtocol}   mask=${mask}    source=${source}    sourcePort=${sourcePort}    translateAddress=${translateAddress}    translatePort=${translatePort}    pool=${pool}    sourceAddressTranslation=${sourceAddressTranslation}
@@ -842,7 +917,7 @@ Create an LTM FastL4 IPv6 Virtual Server
     [Return]    ${api_response}
 
 Create an LTM IP Forwarding Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Creates an IP Forwarding virtual server in LTM (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${destination}    ${partition}=Common    ${addressStatus}=yes    ${autoLasthop}=default  ${connectionLimit}=${0}    ${enabled}=${True}  ${ipProtocol}=any   ${mask}=any    ${source}=0.0.0.0\/0    ${sourcePort}=preserve    ${translateAddress}=disabled    ${translatePort}=disabled   ${pool}=none    ${sourceAddressTranslation_pool}=none   ${sourceAddressTranslation_type}=none
     ${SourceAddressTranslation}    create dictionary    pool=${sourceAddressTranslation_pool}   type=${sourceAddressTranslation_type}
     ${api_payload}    create dictionary    name=${name}    destination=${destination}    partition=${partition}    addressStatus=${addressStatus}    autoLasthop=${autoLasthop}  connectionLimit=${connectionLimit}    ipProtocol=${ipProtocol}   mask=${mask}    source=${source}    sourcePort=${sourcePort}    translateAddress=${translateAddress}    translatePort=${translatePort}    pool=${pool}    sourceAddressTranslation=${sourceAddressTranslation}
@@ -852,7 +927,7 @@ Create an LTM IP Forwarding Virtual Server
     [Return]    ${api_response}
 
 Create an LTM IP Forwarding IPv6 Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Creates an IP Forwarding virtual server in LTM (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${destination}    ${partition}=Common    ${addressStatus}=yes    ${autoLasthop}=default  ${connectionLimit}=${0}    ${enabled}=${True}  ${ipProtocol}=any   ${mask}=any    ${source}=::/0    ${sourcePort}=preserve    ${translateAddress}=disabled    ${translatePort}=disabled   ${pool}=none    ${sourceAddressTranslation_pool}=none   ${sourceAddressTranslation_type}=none
     ${SourceAddressTranslation}    create dictionary    pool=${sourceAddressTranslation_pool}   type=${sourceAddressTranslation_type}
     ${api_payload}    create dictionary    name=${name}    destination=${destination}    partition=${partition}    addressStatus=${addressStatus}    autoLasthop=${autoLasthop}  connectionLimit=${connectionLimit}    ipProtocol=${ipProtocol}   mask=${mask}    source=${source}    sourcePort=${sourcePort}    translateAddress=${translateAddress}    translatePort=${translatePort}    pool=${pool}    sourceAddressTranslation=${sourceAddressTranslation}
@@ -862,7 +937,7 @@ Create an LTM IP Forwarding IPv6 Virtual Server
     [Return]    ${api_response}
 
 Create an LTM Standard Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Creates a Standard virtual server in LTM (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${destination}    ${partition}=Common    ${addressStatus}=yes    ${autoLasthop}=default  ${connectionLimit}=${0}    ${enabled}=${True}  ${ipProtocol}=any   ${mask}=any    ${source}=0.0.0.0\/0    ${sourcePort}=preserve    ${translateAddress}=disabled    ${translatePort}=disabled   ${pool}=none    ${sourceAddressTranslation_pool}=none   ${sourceAddressTranslation_type}=none
     ${SourceAddressTranslation}    create dictionary    pool=${sourceAddressTranslation_pool}   type=${sourceAddressTranslation_type}
     ${api_payload}    create dictionary    name=${name}    destination=${destination}    partition=${partition}    addressStatus=${addressStatus}    autoLasthop=${autoLasthop}  connectionLimit=${connectionLimit}    ipProtocol=${ipProtocol}   mask=${mask}    source=${source}    sourcePort=${sourcePort}    translateAddress=${translateAddress}    translatePort=${translatePort}    pool=${pool}    sourceAddressTranslation=${sourceAddressTranslation}
@@ -872,7 +947,7 @@ Create an LTM Standard Virtual Server
     [Return]    ${api_response}
 
 Create an LTM Standard IPv6 Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Creates a Standard virtual server in LTM (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${destination}    ${partition}=Common    ${addressStatus}=yes    ${autoLasthop}=default  ${connectionLimit}=${0}    ${enabled}=${True}  ${ipProtocol}=any   ${mask}=any    ${source}=0.0.0.0\/0    ${sourcePort}=preserve    ${translateAddress}=disabled    ${translatePort}=disabled   ${pool}=none    ${sourceAddressTranslation_pool}=none   ${sourceAddressTranslation_type}=none
     ${SourceAddressTranslation}    create dictionary    pool=${sourceAddressTranslation_pool}   type=${sourceAddressTranslation_type}
     ${api_payload}    create dictionary    name=${name}    destination=${destination}    partition=${partition}    addressStatus=${addressStatus}    autoLasthop=${autoLasthop}  connectionLimit=${connectionLimit}    ipProtocol=${ipProtocol}   mask=${mask}    source=${source}    sourcePort=${sourcePort}    translateAddress=${translateAddress}    translatePort=${translatePort}    pool=${pool}    sourceAddressTranslation=${sourceAddressTranslation}
@@ -882,7 +957,7 @@ Create an LTM Standard IPv6 Virtual Server
     [Return]    ${api_response}
 
 Delete an LTM Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Deletes a virtual server in LTM (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/virtual/~${partition}~${name}
     ${api_response}    BIG-IP iControl BasicAuth DELETE
@@ -890,13 +965,13 @@ Delete an LTM Virtual Server
     [Return]    ${api_response}
 
 Add a Profile to an LTM Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Adds a LTM profile to a virtual server in LTM (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-profiles-reference-13-1-0/1.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${profile_name}    ${virtual_server_name}    ${profile_partition}=Common    ${virtual_server_partition}=Common
     ${api_payload}    create dictionary
     [Return]    ${api_response}
 
 Retrieve LTM Virtual Server Statistics
-    [Documentation]    Missing!
+    [Documentation]    Pulls statistics on a specific virtual server (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/virtual/~${partition}~${name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -904,7 +979,7 @@ Retrieve LTM Virtual Server Statistics
     [Return]    ${api_response}
 
 Retrieve All LTM Virtual Servers Statistics
-    [Documentation]    Missing!
+    [Documentation]    Pulls statistics on all virtual servers (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_uri}    set variable    /mgmt/tm/ltm/virtual/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -912,7 +987,7 @@ Retrieve All LTM Virtual Servers Statistics
     [Return]    ${api_response}
 
 Get LTM Virtual Server Availability State
-    [Documentation]    Missing!
+    [Documentation]    Pulls the current availability state on a specific virtual server (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/virtual/~${partition}~${name}/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -927,7 +1002,7 @@ Get LTM Virtual Server Availability State
     [return]    ${virtual_server_status}
 
 Get LTM Virtual Server Enabled State
-    [Documentation]    Missing!
+    [Documentation]    Pulls the current enabled state on a specific virtual server (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/virtual/~${partition}~${name}/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -942,7 +1017,7 @@ Get LTM Virtual Server Enabled State
     [return]    ${virtual_server_status}
 
 Apply Firewall Policy to Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Binds an existing firewall policy to a specific virtual server (https://techdocs.f5.com/kb/en-us/products/big-ip-afm/manuals/product/big-ip-network-firewall-policies-and-implementations-14-1-0.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${policy_name}    ${virtual_name}    ${policy_partition}=Common    ${virtual_partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/virtual/~${virtual_partition}~${virtual_name}
     ${api_payload}    create dictionary    fwEnforcedPolicy=/${policy_partition}/${policy_name}
@@ -951,7 +1026,7 @@ Apply Firewall Policy to Virtual Server
     [Return]    ${api_response}
 
 Retrieve the Firewall Policy Attached to a Virtual Server
-    [Documentation]    Missing!
+    [Documentation]    Shows the firewall policy attached a particular virtual server (https://techdocs.f5.com/kb/en-us/products/big-ip-afm/manuals/product/big-ip-network-firewall-policies-and-implementations-14-1-0.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${virtual_name}    ${partition}=Common
     ${api_uri}    set variable    /mgmt/tm/ltm/virtual/~${partition}~${virtual_name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -962,7 +1037,7 @@ Retrieve the Firewall Policy Attached to a Virtual Server
 ## ltm virtual-address
 ########################
 
-Configure Route Health Injection on a Virtual Address
+Configure Route Health Injection on a Virtual Address    
     [Documentation]    Requires address and route-advertisement parameters, partition and route_domain_id are optional. "address" is a IPv4 or IPv6 network. "route-advertisement" can be enabled or disabled.
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${address}    ${route-advertisement}    ${partition}=Common   ${route_domain_id}=0
     ${api_payload}    create dictionary    route-advertisement=${route-advertisement}
@@ -976,7 +1051,7 @@ Configure Route Health Injection on a Virtual Address
 ##################
 
 Reset Interface Stats
-    [Documentation]    Missing!
+    [Documentation]    Resets interface counters on a particular interface (https://support.f5.com/csp/article/K3628)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}
     ${api_payload}    Create Dictionary    command=reset-stats    name=${name}
     ${api_uri}    set variable    /mgmt/tm/net/interface
@@ -985,7 +1060,7 @@ Reset Interface Stats
     [Return]    ${api_response}
 
 Reset All Interface Stats
-    [Documentation]    Missing!
+    [Documentation]    Resets interface counters on all interfaces (https://support.f5.com/csp/article/K3628)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_payload}    Create Dictionary    command=reset-stats
     ${api_uri}    set variable    /mgmt/tm/net/interface
@@ -994,7 +1069,7 @@ Reset All Interface Stats
     [Return]    ${api_response}
 
 Enable a BIG-IP physical interface
-    [Documentation]    Missing!
+    [Documentation]    Enables a particular BIG-IP physical interface (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_payload}    create dictionary    kind=tm:net:interface:interfacestate    name=${interface_name}    enabled=${True}
     ${api_uri}    set variable    /mgmt/tm/net/interface/${interface_name}
@@ -1005,7 +1080,7 @@ Enable a BIG-IP physical interface
     [Return]    ${api_response}
 
 Verify enabled state of BIG-IP physical interface
-    [Documentation]    Missing!
+    [Documentation]    Verifies that a BIG-IP interface is enabled (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_uri}    set variable    /mgmt/tm/net/interface/${interface_name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1015,7 +1090,7 @@ Verify enabled state of BIG-IP physical interface
     [Return]    ${api_response}
 
 Verify up state of BIG-IP physical interface
-    [Documentation]    Missing!
+    [Documentation]    Verifies that a physical interface is UP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_uri}    set variable    /mgmt/tm/net/interface/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1033,7 +1108,7 @@ Verify up state of BIG-IP physical interface
     [Return]    ${api_response}
 
 Disable a BIG-IP physical interface
-    [Documentation]    Missing!
+    [Documentation]    Disables a BIG-IP physical interface (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_payload}    create dictionary    kind=tm:net:interface:interfacestate    name=${interface_name}    disabled=${True}
     ${api_uri}    set variable    /mgmt/tm/net/interface/${interface_name}
@@ -1044,7 +1119,7 @@ Disable a BIG-IP physical interface
     [Return]    ${api_response}
 
 Verify disabled state of BIG-IP physical interface
-    [Documentation]    Missing!
+    [Documentation]    Verifies that a BIG-IP interface is disabled (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_uri}    set variable    /mgmt/tm/net/interface/${interface_name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1054,7 +1129,7 @@ Verify disabled state of BIG-IP physical interface
     [Return]    ${api_response}
 
 Verify down state of BIG-IP physical interface
-    [Documentation]    Missing!
+    [Documentation]    Verifies that a BIG-IP interface is DOWN (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_uri}    set variable    /mgmt/tm/net/interface/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1072,7 +1147,7 @@ Verify down state of BIG-IP physical interface
     [Return]    ${api_response}
 
 Configure BIG-IP Interface Description
-    [Documentation]    Missing!
+    [Documentation]    Configures the description on a BIG-IP interface (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}    ${interface_description}
     ${api_uri}    set variable    /mgmt/tm/net/interface/${interface_name}
     ${api_payload}    create dictionary    description=${interface_description}
@@ -1081,7 +1156,7 @@ Configure BIG-IP Interface Description
     [Return]    ${api_response}
 
 Set BIG-IP Interface LLDP to Transmit Only
-    [Documentation]    Missing!
+    [Documentation]    Changes the LLDP mode on a single BIG-IP interface (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-implementations-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_uri}    set variable    /mgmt/tm/net/interface/${interface_name}
     ${api_payload}    create dictionary    lldpAdmin=txonly
@@ -1090,7 +1165,7 @@ Set BIG-IP Interface LLDP to Transmit Only
     [Return]    ${api_response}
 
 Set BIG-IP Interface LLDP to Receive Only
-    [Documentation]    Missing!
+    [Documentation]    Changes the LLDP mode on a single BIG-IP interface (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-implementations-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_uri}    set variable    /mgmt/tm/net/interface/${interface_name}
     ${api_payload}    create dictionary    lldpAdmin=rxonly
@@ -1099,7 +1174,7 @@ Set BIG-IP Interface LLDP to Receive Only
     [Return]    ${api_response}
 
 Set BIG-IP Interface LLDP to Transmit and Receive
-    [Documentation]    Missing!
+    [Documentation]    Changes the LLDP mode on a single BIG-IP interface (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-implementations-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_uri}    set variable    /mgmt/tm/net/interface/${interface_name}
     ${api_payload}    create dictionary    lldpAdmin=txrx
@@ -1108,7 +1183,7 @@ Set BIG-IP Interface LLDP to Transmit and Receive
     [Return]    ${api_response}
 
 Disable BIG-IP LLDP on Interface
-    [Documentation]    Missing!
+    [Documentation]    Changes the LLDP mode on a single BIG-IP interface (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-implementations-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_name}
     ${api_uri}    set variable    /mgmt/tm/net/interface/${interface_name}
     ${api_payload}    create dictionary    lldpAdmin=disable
@@ -1117,7 +1192,7 @@ Disable BIG-IP LLDP on Interface
     [Return]    ${api_response}
 
 List all BIG-IP Interfaces
-    [Documentation]    Missing!
+    [Documentation]    Retrieves a list of all BIG-IP interfaces (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_uri}    set variable    /mgmt/tm/net/interface
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1132,8 +1207,8 @@ List all BIG-IP Interfaces
     [Return]    ${api_response}
 
 Verify Interface Drop Counters on the BIG-IP
-    [Documentation]    Missing!
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    [Documentation]    Verifies that interface drops are below a certain threshold (defaults to 1000) (https://support.f5.com/csp/article/K10191) Note that frames marked with a dot1q VLAN tag that is not configured on the BIG-IP will result in this counter incrementing with the "vlan unknown" status. See https://support.f5.com/csp/article/K10191.
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_drops_threshold}=1000
     ${api_uri}    set variable    /mgmt/tm/net/interface/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
     Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
@@ -1148,12 +1223,12 @@ Verify Interface Drop Counters on the BIG-IP
     \   ${interface_tmname}    get from dictionary    ${interface_stats_dict}    tmName
     \   ${interface_tmname}    get from dictionary    ${interface_tmname}    description
     \   log    Interface ${interface_tmname} - Drops: ${counters_drops_count}
-    \   should be equal as strings    ${counters_drops_count}    0
+    \   should be true    ${counters_drops_count} < ${interface_drops_threshold}
     [Return]    ${api_response}
 
 Verify Interface Error Counters on the BIG-IP
-    [Documentation]    Missing!
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    [Documentation]    Verifies that interface errors are below a certain threshold (defaults to 1000) (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/3.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${interface_errors_threshold}=1000
     ${api_uri}    set variable    /mgmt/tm/net/interface/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
     Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
@@ -1168,7 +1243,7 @@ Verify Interface Error Counters on the BIG-IP
     \   ${interface_tmname}    get from dictionary    ${interface_stats_dict}    tmName
     \   ${interface_tmname}    get from dictionary    ${interface_tmname}    description
     \   log    Interface ${interface_tmname} - Errors: ${counters_errors_count}
-    \   should be equal as strings    ${counters_errors_count}    0
+    \   should be true    ${counters_errors_count} < ${interface_errors_threshold}
     [Return]    ${api_response}
 
 ##############
@@ -1176,7 +1251,7 @@ Verify Interface Error Counters on the BIG-IP
 ##############
 
 Create Static Route Configuration on the BIG-IP
-    [Documentation]    Missing!
+    [Documentation]    Creates a static route on the BIG-IP (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}    ${cidr_network}    ${gateway}    ${description}
     ${api_payload}    create dictionary    name=${name}    network=${cidr_network}    gw=${gateway}   partition=${partition}  description=${description}
     ${api_uri}    set variable    /mgmt/tm/net/route
@@ -1186,7 +1261,7 @@ Create Static Route Configuration on the BIG-IP
     [Return]    ${api_response}
 
 Verify Static Route Configuration on the BIG-IP
-    [Documentation]    Missing!
+    [Documentation]    Lists configured static routes on the BIG-IP (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}    ${cidr_network}    ${gateway}    ${description}
     ${verification_dict}    create dictionary    name=${name}    partition=${partition}    network=${cidr_network}    gw=${gateway}   description=${description}
     ${api_uri}    set variable    /mgmt/tm/net/route/~${partition}~${name}
@@ -1197,7 +1272,7 @@ Verify Static Route Configuration on the BIG-IP
     [Return]    ${api_response}
 
 Create Static Default Route Configuration on the BIG-IP
-    [Documentation]    Missing!
+    [Documentation]    Creates a static default route on the BIG-IP (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${partition}    ${gateway}    ${description}
     ${api_payload}    create dictionary    name=default    gw=${gateway}   partition=${partition}  description=${description}
     ${api_uri}    set variable    /mgmt/tm/net/route
@@ -1207,7 +1282,7 @@ Create Static Default Route Configuration on the BIG-IP
     [Return]    ${api_response}
 
 Verify Static Default Route Configuration on the BIG-IP
-    [Documentation]    Missing!
+    [Documentation]    Verifies the configuration of the static default route (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${partition}    ${gateway}    ${description}
     ${verification_dict}    create dictionary    name=default-inet6    partition=${partition}    gw=${gateway}   description=${description}
     ${api_uri}    set variable    /mgmt/tm/net/route/~${partition}~${name}
@@ -1218,7 +1293,7 @@ Verify Static Default Route Configuration on the BIG-IP
     [Return]    ${api_response}
 
 Create Static IPv6 Default Route Configuration on the BIG-IP
-    [Documentation]    Missing!
+    [Documentation]    Creates a static default route for IPv6 (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${partition}    ${gateway}    ${description}
     ${api_payload}    create dictionary    name=default    gw=${gateway}   partition=${partition}  description=${description}
     ${api_uri}    set variable    /mgmt/tm/net/route
@@ -1228,7 +1303,7 @@ Create Static IPv6 Default Route Configuration on the BIG-IP
     [Return]    ${api_response}
 
 Verify Static IPv6 Default Route Configuration on the BIG-IP
-    [Documentation]    Missing!
+    [Documentation]    Verifies the configuration of the static default route for IPv6 (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${partition}    ${gateway}    ${description}
     ${verification_dict}    create dictionary    name=default-inet6    partition=${partition}    gw=${gateway}   description=${description}
     ${api_uri}    set variable    /mgmt/tm/net/route/~${partition}~${name}
@@ -1239,7 +1314,7 @@ Verify Static IPv6 Default Route Configuration on the BIG-IP
     [Return]    ${api_response}
 
 Verify Static Route Presence in BIG-IP Route Table
-    [Documentation]    Missing!
+    [Documentation]    Verifies that a route actually exists in the BIG-IP routing table (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}    ${cidr_network}    ${gateway}
     ${api_uri}    set variable    /mgmt/tm/net/route/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1252,7 +1327,7 @@ Verify Static Route Presence in BIG-IP Route Table
     [Return]    ${api_response}
 
 Delete Static Route Configuration on the BIG-IP
-    [Documentation]    Missing!
+    [Documentation]    Deletes a static route on the BIG-IP (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}
     ${api_uri}    set variable    /mgmt/tm/net/route/~${partition}~${name}
     ${api_response}    BIG-IP iControl BasicAuth DELETE    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1260,7 +1335,7 @@ Delete Static Route Configuration on the BIG-IP
     [Return]    ${api_response}
 
 Verify Static Route Deletion on the BIG-IP
-    [Documentation]    Missing!
+    [Documentation]    Verifies that a static route does not exist on the BIG-IP (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}
     ${api_uri}    set variable    /mgmt/tm/net/route/~${partition}~${name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1268,7 +1343,7 @@ Verify Static Route Deletion on the BIG-IP
     [Return]    ${api_response}
 
 Verify Static Route Removal in BIG-IP Route Table
-    [Documentation]    Missing!
+    [Documentation]    Verifies that a static route does not appear in the BIG-IP routing table (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${partition}
     ${api_uri}    set variable    /mgmt/tm/net/route/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1281,7 +1356,7 @@ Verify Static Route Removal in BIG-IP Route Table
     [Return]    ${api_response}
 
 Display BIG-IP Static Route Configuration
-    [Documentation]    Missing!
+    [Documentation]    Lists the static routes configured on the BIG-IP (https://support.f5.com/csp/article/K13833)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_uri}    set variable    /mgmt/tm/net/route
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1295,7 +1370,7 @@ Display BIG-IP Static Route Configuration
 #####################
 
 Create a Route Domain on the BIG-IP
-    [Documentation]    Missing!
+    [Documentation]    Creates a route domain (VRF) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/9.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${route_domain_name}    ${route_domain_id}    ${partition}=Common
     ${api_payload}    create dictionary    name=${route_domain_name}   id=${route_domain_id}   partition=${partition}
     ${api_uri}    set variable    /mgmt/tm/net/route-domain
@@ -1307,7 +1382,7 @@ Create a Route Domain on the BIG-IP
     [Return]    ${api_response}
 
 Add a Description to a BIG-IP Route Domain
-    [Documentation]    Missing!
+    [Documentation]    Adds a description to an existing route domain (VRF) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/9.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${route_domain_name}    ${description}    ${partition}=Common
     ${api_payload}    create dictionary    description=${description}
     ${api_uri}    set variable    /mgmt/tm/net/route-domain/~${partition}~${route_domain_name}
@@ -1316,7 +1391,7 @@ Add a Description to a BIG-IP Route Domain
     [Return]    ${api_response}
 
 Enable BGP Only on BIG-IP Route Domain
-    [Documentation]    Missing!
+    [Documentation]    Enables BGP on an existing route domain (VRF) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/9.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${route_domain_name}    ${partition}=Common
     ${api_routing_protocol_list}    create list    BGP
     ${api_payload}    create dictionary    routingProtocol=${api_routing_protocol_list}
@@ -1327,7 +1402,7 @@ Enable BGP Only on BIG-IP Route Domain
     [Return]    ${api_response}
 
 Enable BGP and BFD on BIG-IP Route Domain
-    [Documentation]    Missing!
+    [Documentation]    Enables BGP and BFD on an existing route domain (VRF) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/9.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${route_domain_name}    ${partition}=Common
     ${api_routing_protocol_list}    create list    BGP    BFD
     ${api_payload}    create dictionary    routingProtocol=${api_routing_protocol_list}
@@ -1338,7 +1413,7 @@ Enable BGP and BFD on BIG-IP Route Domain
     [Return]    ${api_response}
 
 Disable Dynamic Routing on BIG-IP Route Domain
-    [Documentation]    Missing!
+    [Documentation]    Disables all dynamic routing on an existing route domain (VRF) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/9.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${route_domain_name}    ${partition}=Common
     ${api_routing_protocol_list}    create list
     ${api_payload}    create dictionary    routingProtocol=${api_routing_protocol_list}
@@ -1349,7 +1424,7 @@ Disable Dynamic Routing on BIG-IP Route Domain
     [Return]    ${api_response}
 
 Enable Route Domain Strict Routing
-    [Documentation]    Missing!
+    [Documentation]    Enables strict-routing on an existing route domain (VRF) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/9.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${route_domain_name}    ${partition}=Common
     ${api_payload}    create dictionary    strict=enabled
     ${api_uri}    set variable    /mgmt/tm/net/route-domain/~${partition}~${route_domain_name}
@@ -1358,7 +1433,7 @@ Enable Route Domain Strict Routing
     [Return]    ${api_response}
 
 Disable Route Domain Strict Routing
-    [Documentation]    Missing!
+    [Documentation]    Disables strict-routing on an existing route domain (VRF) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-1-0/9.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${route_domain_name}    ${partition}=Common
     ${api_payload}    create dictionary    strict=disabled
     ${api_uri}    set variable    /mgmt/tm/net/route-domain/~${partition}~${route_domain_name}
@@ -1371,7 +1446,7 @@ Disable Route Domain Strict Routing
 #############
 
 Reset Self-IP Stats
-    [Documentation]    Missing!
+    [Documentation]    Resets the counters on a particular self-ip on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}
     ${api_payload}    Create Dictionary    command=reset-stats    name=${name}
     ${api_uri}    set variable    /mgmt/tm/net/self
@@ -1380,7 +1455,7 @@ Reset Self-IP Stats
     [Return]    ${api_response}
 
 Reset All Self-IP Stats
-    [Documentation]    Missing!
+    [Documentation]    Resets the counters on all self-ips on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_payload}    Create Dictionary    command=reset-stats
     ${api_uri}    set variable    /mgmt/tm/net/self
@@ -1389,7 +1464,7 @@ Reset All Self-IP Stats
     [Return]    ${api_response}
 
 Create BIG-IP Non-floating Self IP Address
-    [Documentation]    Missing!
+    [Documentation]    Creates a non-floating self-ip on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${vlan}    ${address}    ${partition}="Common"    ${allow-service}="none"    ${description}="Robot Framework"    ${traffic-group}="traffic-group-local-only"
     ${api_payload}    Create Dictionary   name=${name}    partition=${partition}  address=${address}  allowService=${allow-service}   trafficGroup=${traffic-group}   description=${description}  vlan=${vlan}
     ${api_uri}    set variable    /mgmt/tm/net/self
@@ -1398,7 +1473,7 @@ Create BIG-IP Non-floating Self IP Address
     [Return]    ${api_response}
 
 Create BIG-IP Floating Self IP Address
-    [Documentation]    Missing!
+    [Documentation]    Creates a floating self-ip on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${vlan}    ${address}    ${partition}="Common"   ${allow-service}="none"    ${description}="Robot Framework"    ${traffic-group}="traffic-group-1"
     ${api_payload}    Create Dictionary   name=${name}    partition=${partition}  address=${address}  allowService=${allow-service}   trafficGroup=${traffic-group}   description=${description}  vlan=${vlan}
     ${api_uri}    set variable    /mgmt/tm/net/self
@@ -1407,7 +1482,7 @@ Create BIG-IP Floating Self IP Address
     [Return]    ${api_response}
 
 Verify BIG-IP Non-floating Self IP Address
-    [Documentation]    Missing!
+    [Documentation]    Verifies the configuration of a non-floating self-ip on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${address}    ${partition}="Common"
     ${api_uri}    set variable    /mgmt/tm/net/self/~${partition}~${name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1415,7 +1490,7 @@ Verify BIG-IP Non-floating Self IP Address
     [Return]    ${api_response}
 
 Verify BIG-IP Floating Self IP Address
-    [Documentation]    Missing!
+    [Documentation]    Verifies the configuration of a floating self-ip on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/5.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}    ${address}    ${partition}="Common"
     ${api_uri}    set variable    /mgmt/tm/net/self/~${partition}~${name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1427,7 +1502,7 @@ Verify BIG-IP Floating Self IP Address
 ##############
 
 Reset Trunk Stats
-    [Documentation]    Missing!
+    [Documentation]    Resets statistics on a trunk in the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}
     ${api_payload}    Create Dictionary    command=reset-stats    name=${name}
     ${api_uri}    set variable    /mgmt/tm/net/trunk
@@ -1436,7 +1511,7 @@ Reset Trunk Stats
     [Return]    ${api_response}
 
 Reset All Trunk Stats
-    [Documentation]    Missing!
+    [Documentation]    Resets statistics on all trunks in the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_payload}    Create Dictionary    command=reset-stats
     ${api_uri}    set variable    /mgmt/tm/net/trunk
@@ -1444,8 +1519,8 @@ Reset All Trunk Stats
     Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
-Create BIG-IP Trunk
-    [Documentation]    Creates a trunk object on the BIG-IP
+Create BIG-IP Trunk    
+    [Documentation]    Creates a trunk (port aggregation object) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}
     ${api_uri}    set variable    /mgmt/tm/net/trunk
     ${api_payload}    create dictionary    name=${name}
@@ -1453,8 +1528,8 @@ Create BIG-IP Trunk
     Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
-Verify BIG-IP Trunk Exists
-    [Documentation]    Verifies that a trunk object exists on the BIG-IP
+Verify BIG-IP Trunk Exists    
+    [Documentation]    Verifies that a trunk (port aggregation object) exists on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1465,7 +1540,7 @@ Verify BIG-IP Trunk Exists
     [Return]    ${api_response}
 
 Delete BIG-IP Trunk
-    [Documentation]    Missing!
+    [Documentation]    Deletes a trunk (port aggregation object) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${name}
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${name}
     ${api_response}    BIG-IP iControl BasicAuth DELETE
@@ -1473,7 +1548,7 @@ Delete BIG-IP Trunk
     [Return]    ${api_response}
 
 Set Trunk Description
-    [Documentation]    Missing!
+    [Documentation]    Configures a description on a trunk (port aggregation object) on the BIG-IP (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${trunk_name}    ${trunk_description}
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}
     ${api_payload}    create dictionary    description=${trunk_description}
@@ -1482,7 +1557,7 @@ Set Trunk Description
     [Return]    ${api_response}
 
 Retrieve BIG-IP Trunk Status and Statistics
-    [Documentation]    Missing!
+    [Documentation]    Retrieve status and statistics for a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1494,7 +1569,7 @@ Retrieve BIG-IP Trunk Status and Statistics
     [Return]    ${api_response}
 
 Verify BIG-IP Trunk is Up
-    [Documentation]    Missing!
+    [Documentation]    Verify UP status on a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}/stats
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1511,7 +1586,7 @@ Verify BIG-IP Trunk is Up
     [Return]    ${api_response}
 
 Set BIG-IP Trunk Interface List
-    [Documentation]    Missing!
+    [Documentation]    Assign multiple interfaces to a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}    ${physical_interface_list}
     ${physical_interface_list}    convert to list    ${physical_interface_list}
     ${api_payload}    create dictionary    interfaces    ${physical_interface_list}
@@ -1521,7 +1596,7 @@ Set BIG-IP Trunk Interface List
     [Return]    ${api_response}
 
 List BIG-IP Trunk Interface Configuration
-    [Documentation]    Missing!
+    [Documentation]    Assign interfaces to a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1529,7 +1604,7 @@ List BIG-IP Trunk Interface Configuration
     [Return]    ${api_response}
 
 Add Interface to BIG-IP Trunk
-    [Documentation]    Missing!
+    [Documentation]    Adds a single interface to a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}    ${physical_interface}
     log    Getting list of existing interfaces on trunk
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}
@@ -1554,7 +1629,7 @@ Add Interface to BIG-IP Trunk
     [Return]    ${api_response}
 
 Remove Interface from BIG-IP Trunk
-    [Documentation]    Missing!
+    [Documentation]    Removes a single interface from a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}    ${physical_interface}
     log    Getting list of existing interfaces on trunk
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}
@@ -1579,7 +1654,7 @@ Remove Interface from BIG-IP Trunk
     [Return]    ${api_response}
 
 Verify BIG-IP Trunk Interface Removal
-    [Documentation]    Missing!
+    [Documentation]    Verifies removal of a single interface from a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}    ${physical_interface}
     log    Verifying removal of physical interface from BIG-IP trunk
     ${api_uri}    set variable   /mgmt/tm/net/trunk/${trunk_name}
@@ -1592,7 +1667,7 @@ Verify BIG-IP Trunk Interface Removal
     [Return]    ${api_response}
 
 Verify BIG-IP Trunk Interface Addition
-    [Documentation]    Missing!
+    [Documentation]    Verifies the addition of a single interface from a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}    ${physical_interface}
     log    Verifying addition of physical interface from BIG-IP trunk
     ${api_uri}    set variable   /mgmt/tm/net/trunk/${trunk_name}
@@ -1605,7 +1680,7 @@ Verify BIG-IP Trunk Interface Addition
     [Return]    ${api_response}
 
 Verify BIG-IP Trunk Interface List
-    [Documentation]    Missing!
+    [Documentation]    Verifies the list of interfaces on a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}    ${physical_interface_list}
     log    Verifying addition of physical interface from BIG-IP trunk
     ${api_uri}    set variable   /mgmt/tm/net/trunk/${trunk_name}
@@ -1620,8 +1695,8 @@ Verify BIG-IP Trunk Interface List
     [Return]    ${api_response}
 
 Verify Trunk Collision Counters on BIG-IP
-    [Documentation]    Missing!
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}
+    [Documentation]    Verifies there are no collisions on a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}    ${trunk_collisions_threshold}=250
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}/stats
     set test variable    ${api_uri}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1637,12 +1712,12 @@ Verify Trunk Collision Counters on BIG-IP
     ${trunk_tmname}    get from dictionary    ${trunk_stats_dict}    tmName
     ${trunk_tmname}    get from dictionary    ${trunk_tmname}    description
     log    Trunk ${trunk_tmname} - Collisions: ${counters_collisions_count}
-    should be equal as strings    ${counters_collisions_count}    0
+    should be true    ${counters_collisions_count} < ${trunk_collisions_threshold}
     [Return]    ${api_response}
 
 Verify Trunk Drop Counters on BIG-IP
-    [Documentation]    Missing!
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}
+    [Documentation]    Verifies that trunk drops are below a certain threshold (defaults to 1000) (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}    ${trunk_dropsIn_threshold}=1000    ${trunk_dropsOut_threshold}=1000
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}/stats
     set test variable    ${api_uri}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1661,13 +1736,13 @@ Verify Trunk Drop Counters on BIG-IP
     ${trunk_tmname}    get from dictionary   ${trunk_tmname}    description
     log    Trunk ${trunk_tmname} - Drops IN: ${counters_dropsIn_count}
     log    Trunk ${trunk_tmname} - Drops Out: ${counters_dropsOut_count}
-    should be equal as strings    ${counters_dropsIn_count}    0
-    should be equal as strings    ${counters_dropsOut_count}    0
+    should be true    ${counters_dropsIn_count} < ${trunk_dropsIn_threshold}
+    should be true    ${counters_dropsOut_count} < ${trunk_dropsOut_threshold}
     [Return]    ${api_response}
 
 Verify Trunk Error Counters on BIG-IP
-    [Documentation]    Missing!
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}
+    [Documentation]    Verifies that trunk errors are below a certain threshold (defaults to 500 for both in and out thresholds) (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}    ${trunk_errorsIn_threshold}=500    ${trunk_errorsOut_threshold}=500
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}/stats
     set test variable    ${api_uri}
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
@@ -1686,12 +1761,12 @@ Verify Trunk Error Counters on BIG-IP
     ${trunk_tmname}    get from dictionary   ${trunk_tmname}    description
     log    Trunk ${trunk_tmname} - Errors In: ${counters_errorsIn_count}
     log    Trunk ${trunk_tmname} - Errors Out: ${counters_errorsOut_count}
-    should be equal as strings    ${counters_errorsIn_count}    0
-    should be equal as strings    ${counters_errorsOut_count}    0
+    should be true    ${counters_errorsIn_count} < ${trunk_errorsIn_threshold}
+    should be true    ${counters_errorsOut_count} < ${trunk_errorsOut_threshold}
     [Return]    ${api_response}
 
 Get BIG-IP Trunk bitsIn Value
-    [Documentation]    Missing!
+    [Documentation]    Retrieve the "bits in" counter on a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}/stats
     set test variable    ${api_uri}
@@ -1711,7 +1786,7 @@ Get BIG-IP Trunk bitsIn Value
     [Return]    ${api_response}
 
 Get BIG-IP Trunk bitsOut Value
-    [Documentation]    Missing!
+    [Documentation]    Retrieve the "bits out" counter on a BIG-IP trunk (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/tmos-routing-administration-13-0-0/3.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}   ${trunk_name}
     ${api_uri}    set variable    /mgmt/tm/net/trunk/${trunk_name}/stats
     set test variable    ${api_uri}
@@ -1739,6 +1814,7 @@ Get Current List of Interfaces Mapped to VLAN
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}    ${vlan_name}
     ${api_uri}    set variable    /mgmt/tm/net/vlan/${vlan_name}/interfaces
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     ${api_response_dict}    to json    ${api_response.content}
     Dictionary Should Contain Key   ${api_response_dict}    interfaces
     ${initial_interface_list}    get from dictionary    ${api_response_dict}    interfaces
@@ -1942,6 +2018,7 @@ Save the BIG-IP Configuration
     ${api_payload}    create dictionary    command    save
     ${api_uri}    set variable    /mgmt/tm/sys/config
     ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 
@@ -2236,6 +2313,69 @@ Retrieve BIG-IP Performance Throughput Statistics
     [Teardown]    Run Keywords   Delete All Sessions
     [Return]    ${api_response}
 
+Reset All Performance Stats
+    [Documentation]    Clears all of the performance stats (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_payload}    Create Dictionary    command=reset-stats
+    ${api_uri}    set variable    /mgmt/tm/sys/performance/all-stats
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Reset Performance Throughput Stats
+    [Documentation]    Clears the performance throughput stats (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_payload}    Create Dictionary    command=reset-stats
+    ${api_uri}    set variable    /mgmt/tm/sys/performance/throughput
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Reset Performance System Stats
+    [Documentation]    Clears the performance system stats (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_payload}    Create Dictionary    command=reset-stats
+    ${api_uri}    set variable    /mgmt/tm/sys/performance/system
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Reset Performance Ramcache Stats
+    [Documentation]    Clears the performance ramcache stats (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_payload}    Create Dictionary    command=reset-stats
+    ${api_uri}    set variable    /mgmt/tm/sys/performance/ramcache
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Reset Performance DNSSEC Stats
+    [Documentation]    Clears the performance DNSSEC stats (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_payload}    Create Dictionary    command=reset-stats
+    ${api_uri}    set variable    /mgmt/tm/sys/performance/dnssec
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Reset Performance DNS Express Stats
+    [Documentation]    Clears the performance DNS Express stats (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_payload}    Create Dictionary    command=reset-stats
+    ${api_uri}    set variable    /mgmt/tm/sys/performance/dnsexpress
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
+Reset Performance Connection Stats
+    [Documentation]    Clears the performance connection stats (https://techdocs.f5.com/kb/en-us/products/big-ip_ltm/manuals/product/ltm-basics-13-0-0/2.html)
+    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
+    ${api_payload}    Create Dictionary    command=reset-stats
+    ${api_uri}    set variable    /mgmt/tm/sys/performance/connection
+    ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
+    [Return]    ${api_response}
+
 ##################
 ## sys provision
 ##################
@@ -2277,14 +2417,15 @@ Verify GTM is Provisioned
     [Return]    ${api_response}
 
 ##############
-## sys ready
+## sys ready  
 ##############
 
 Verify All BIG-IP Ready States
     [Documentation]    Verifies that the BIG-IP is ready in configuration, license and provisioning state - used by bigip_wait in Ansible (https://clouddocs.f5.com/products/orchestration/ansible/devel/modules/bigip_wait_module.html)    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
-    ${api_uri}    set variable    /mgmt/tm/sys/ready
+    ${api_uri}    set variable    /mgmt/tm/sys/ready    
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     ${api_response_dict}    To Json    ${api_response.content}
     ${ready_states}    get from dictionary    ${api_response_dict}    entries
     ${ready_states}    get from dictionary    ${ready_states}    https://localhost/mgmt/tm/sys/ready/0
@@ -2301,12 +2442,13 @@ Verify All BIG-IP Ready States
     should be equal as strings    ${ready_state_value}    ${license_ready_state}
     should be equal as strings    ${ready_state_value}    ${provision_ready_state}
     [Return]    ${ready_states}
-
+    
 Verify BIG-IP Configuration Ready State
     [Documentation]    Verifies that the BIG-IP is in a "configuration loaded" state - used by bigip_wait in Ansible (https://clouddocs.f5.com/products/orchestration/ansible/devel/modules/bigip_wait_module.html)    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
-    ${api_uri}    set variable    /mgmt/tm/sys/ready
+    ${api_uri}    set variable    /mgmt/tm/sys/ready    
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     ${api_response_dict}    To Json    ${api_response.content}
     ${config_ready_state}    get from dictionary    ${api_response_dict}    entries
     ${config_ready_state}    get from dictionary    ${config_ready_state}    https://localhost/mgmt/tm/sys/ready/0
@@ -2320,8 +2462,9 @@ Verify BIG-IP Configuration Ready State
 
 Verify BIG-IP License Ready State
     [Documentation]    Verifies that the BIG-IP is in a licensed state - used by bigip_wait in Ansible (https://clouddocs.f5.com/products/orchestration/ansible/devel/modules/bigip_wait_module.html)    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
-    ${api_uri}    set variable    /mgmt/tm/sys/ready
+    ${api_uri}    set variable    /mgmt/tm/sys/ready    
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     ${api_response_dict}    To Json    ${api_response.content}
     ${license_ready_state}    get from dictionary    ${api_response_dict}    entries
     ${license_ready_state}    get from dictionary    ${license_ready_state}    https://localhost/mgmt/tm/sys/ready/0
@@ -2336,8 +2479,9 @@ Verify BIG-IP License Ready State
 Verify BIG-IP Provision Ready State
     [Documentation]    Verifies that the BIG-IP is in a state where any provisioning tasks are complete - used by bigip_wait in Ansible (https://clouddocs.f5.com/products/orchestration/ansible/devel/modules/bigip_wait_module.html)
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
-    ${api_uri}    set variable    /mgmt/tm/sys/ready
+    ${api_uri}    set variable    /mgmt/tm/sys/ready    
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     ${api_response_dict}    To Json    ${api_response.content}
     ${provision_ready_state}    get from dictionary    ${api_response_dict}    entries
     ${provision_ready_state}    get from dictionary    ${provision_ready_state}    https://localhost/mgmt/tm/sys/ready/0
@@ -2615,6 +2759,7 @@ View BIG-IP Turboflex Profile
     [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     ${api_uri}    set variable    /mgmt/tm/sys/turboflex/profile-config
     ${api_response}    BIG-IP iControl BasicAuth GET    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 ############
@@ -2627,7 +2772,7 @@ Save a UCS on the BIG-IP
     ${api_payload}    create dictionary    command=save    name=${ucs_filename}
     ${api_uri}    set variable    /mgmt/tm/sys/ucs
     ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
-    [Teardown]    Delete All Sessions
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 Load a UCS on the BIG-IP
@@ -2636,7 +2781,7 @@ Load a UCS on the BIG-IP
     ${api_payload}    create dictionary    command=load    name=${ucs_filename}
     ${api_uri}    set variable    /mgmt/tm/sys/ucs
     ${api_response}    BIG-IP iControl BasicAuth POST    bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}    api_payload=${api_payload}
-    [Teardown]    Delete All Sessions
+    Should Be Equal As Strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     [Return]    ${api_response}
 
 ################
@@ -2648,8 +2793,7 @@ Retrieve BIG-IP Version
     [Arguments]    ${bigip_host}   ${bigip_username}   ${bigip_password}
     ${api_auth}    create list    ${bigip_username}    ${bigip_password}
     ${api_uri}    set variable    /mgmt/tm/sys/version
-    ${api_response}    BIG-IP iControl BasicAuth GET   bigip_host=${bigip_host}    bigip_username=${bigip_username}
-    ...   bigip_password=${bigip_password}    api_uri=${api_uri}
+    ${api_response}    BIG-IP iControl BasicAuth GET   bigip_host=${bigip_host}    bigip_username=${bigip_username}    bigip_password=${bigip_password}    api_uri=${api_uri}
     should be equal as strings    ${api_response.status_code}    ${HTTP_RESPONSE_OK}
     Log    API RESPONSE: ${api_response.content}
     [Return]    ${api_response}
@@ -2664,13 +2808,4 @@ Retrieve BIG-IP Version using Token Authentication
     ${verification_text}    set variable  "kind":"tm:sys:version:versionstats"
     should contain    ${api_response.text}    ${verification_text}
     [Teardown]    Run Keywords    Delete Token    bigip_host=${bigip_host}    api_token=${api_token}    AND    Delete All Sessions
-    [Return]    ${api_response}
-
-###############
-## Zonerunner
-###############
-
-Create a BIG-IP Zonerunner Zone
-    [Documentation]    Missing!
-    [Arguments]    ${bigip_host}    ${bigip_username}    ${bigip_password}
     [Return]    ${api_response}
